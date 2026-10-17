@@ -88,7 +88,7 @@ section:last-child { border-bottom: 0; }
 
 /* Hero */
 .hero { padding: 6rem 0 4.5rem; }
-.portrait { width: 132px; height: 132px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 2rem; filter: grayscale(.15); }
+.portrait { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 2rem; }
 .kicker { margin: 0 0 1rem; color: var(--muted); font-size: .95rem; }
 h1 {
   font-family: var(--serif); font-weight: 300;
@@ -191,4 +191,14 @@ h2 + h3, .note + .entries, .cols h3 { margin-top: 0; }
 @media (max-width: 380px) {
   .brand { display: none; }
   .nav-links { margin-right: auto; }
+}
+
+/* Month ranges in the date column */
+.dated > li { grid-template-columns: 9.5rem 1fr; }
+.date em { font-style: normal; display: block; }
+.dated .meta + .meta { margin-top: .25rem; }
+.tight > li { grid-template-columns: 5.5rem 1fr; }
+@media (max-width: 640px) {
+  .dated > li, .tight > li { grid-template-columns: 1fr; }
+  .date em { display: inline; }
 }
