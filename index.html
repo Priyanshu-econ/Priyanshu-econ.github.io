@@ -3,178 +3,268 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Priyanshu Chavda · Economics</title>
-  <meta name="description" content="Priyanshu Chavda, PhD scholar in economics at Pandit Deendayal Energy University. Research in energy and environmental economics, public finance, and applied econometrics.">
+  <title>Priyanshu Chavda</title>
+  <meta name="description" content="Priyanshu Chavda, applied economist and PhD scholar at Pandit Deendayal Energy University, working on energy and environmental economics with applied econometrics.">
   <meta name="author" content="Priyanshu Chavda">
   <meta property="og:title" content="Priyanshu Chavda">
-  <meta property="og:description" content="PhD scholar in economics, Pandit Deendayal Energy University. Energy and environmental economics, public finance, applied econometrics.">
+  <meta property="og:description" content="Applied economist working on energy and environmental economics.">
   <meta property="og:type" content="website">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <script>
+    // Day or night: a saved choice wins; otherwise follow the visitor's clock (night from 7 pm to 6 am).
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') {
+        var h = new Date().getHours();
+        t = (h >= 19 || h < 6) ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Schibsted+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<aside class="side">
-  <div class="side-inner">
-    <!-- To add a photo: put photo.jpg in this folder and uncomment the next line -->
-    <!-- <img class="portrait" src="photo.jpg" alt="Priyanshu Chavda"> -->
-    <h1 class="name">Priyanshu<br>Chavda</h1>
-    <p class="role">PhD Scholar in Economics</p>
-    <p class="affil">School of Liberal Studies<br>Pandit Deendayal Energy University<br>Gandhinagar, Gujarat, India</p>
-
-    <nav class="links" aria-label="Profiles">
-      <a href="mailto:priyanshu.chavda2002@gmail.com">Email</a>
-      <a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_c374cce453ef490b9cf6d5a4d223bc02.pdf">CV (PDF)</a>
-      <a href="https://github.com/Priyanshu-econ">GitHub</a>
-      <!-- Add when ready:
-      <a href="https://scholar.google.com/citations?user=YOUR_ID">Google Scholar</a>
-      <a href="https://orcid.org/0000-0000-0000-0000">ORCID</a>
-      <a href="https://www.linkedin.com/in/YOUR-HANDLE">LinkedIn</a>
-      -->
-    </nav>
-
-    <nav class="toc" aria-label="Sections">
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">Priyanshu Chavda</a>
+    <nav class="nav-links" aria-label="Sections">
       <a href="#about">About</a>
-      <a href="#publications">Publications</a>
-      <a href="#presentations">Presentations</a>
-      <a href="#experience">Research experience</a>
-      <a href="#code">Code and data</a>
+      <a href="#research">Research</a>
+      <a href="#teaching">Teaching</a>
+      <a href="files/Priyanshu_Chavda_CV.pdf">CV</a>
     </nav>
+    <button class="theme" type="button" aria-label="Switch to night mode" title="Switch day / night">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><g><line x1="12" y1="1.8" x2="12" y2="4.2"/><line x1="12" y1="19.8" x2="12" y2="22.2"/><line x1="1.8" y1="12" x2="4.2" y2="12"/><line x1="19.8" y1="12" x2="22.2" y2="12"/><line x1="4.8" y1="4.8" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19.2" y2="19.2"/><line x1="4.8" y1="19.2" x2="6.5" y2="17.5"/><line x1="17.5" y1="6.5" x2="19.2" y2="4.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg>
+    </button>
   </div>
-</aside>
+</header>
 
-<main class="main">
+<main id="top">
 
-  <section id="about">
-    <p class="lede">I study how energy policy, fiscal choices, and trade shape environmental outcomes and the transition to renewable energy, using time series and panel data methods.</p>
-    <p>I am a PhD scholar in the Department of Economics at the School of Liberal Studies, Pandit Deendayal Energy University (PDEU). Before the PhD, I completed an M.A. in Economics at PDEU, graduating as gold medalist, and a B.A. in Economics at L.D. Arts College, Gujarat University.</p>
-    <p>My work looks at questions such as whether fossil fuel subsidies hold back renewable energy, how green trade affects India's ecological footprint, and how energy security differs across Indian states. I hope to contribute both to academic research and to policy advice on sustainable development.</p>
-    <dl class="facts">
-      <div><dt>Research fields</dt><dd>Energy economics, environmental economics, public finance, macroeconomics, applied econometrics</dd></div>
-      <div><dt>Methods</dt><dd>Time series and panel data, quantile regression, club convergence</dd></div>
-      <div><dt>Membership</dt><dd>International Association for Energy Economics (IAEE), since 2026</dd></div>
-    </dl>
+  <section class="hero" id="about">
+    <!-- To add a photo: save it as photo.jpg next to this file and uncomment the line below. -->
+    <!-- <img class="portrait" src="photo.jpg" alt="Priyanshu Chavda" width="132" height="132"> -->
+    <p class="kicker">PhD Scholar in Economics, Pandit Deendayal Energy University</p>
+    <h1>Priyanshu Chavda</h1>
+    <div class="intro">
+      <p>I am an applied economist working in energy and environmental economics. I enjoy starting from the data: building it, bringing the right econometric model to it, and then doing the part I find most rewarding, which is interpreting what the results say about the economy and the environment.</p>
+      <p>My toolkit is applied econometrics, mostly time series and panel data methods, put to work on questions of energy use, emissions, and the economics of the transition to cleaner energy.</p>
+    </div>
+    <ul class="profiles">
+      <li><a href="mailto:priyanshu.chavda2002@gmail.com">Email</a></li>
+      <li><a href="https://scholar.google.com/citations?user=boiI2VkAAAAJ&amp;hl=en">Google Scholar</a></li>
+      <li><a href="https://orcid.org/0009-0000-0858-2322">ORCID</a></li>
+      <li><a href="https://github.com/Priyanshu-econ">GitHub</a></li>
+      <li><a href="files/Priyanshu_Chavda_CV.pdf">CV</a></li>
+    </ul>
   </section>
 
-  <section id="publications">
-    <h2>Publications</h2>
-    <ol class="pubs">
+  <section id="research">
+    <h2>Research</h2>
+
+    <h3>Publications</h3>
+    <ol class="entries">
       <li>
-        <p class="title">Impact of fossil fuel subsidies, natural resource rent and corruption on renewable energy in MENA countries</p>
-        <p class="meta"><b>Chavda, P.</b> and Mehta, D. (2026). <i>Asia-Pacific Journal of Regional Science</i>, 10(1), 21.</p>
-        <p class="actions"><a href="https://doi.org/10.1007/s41685-026-00424-x">Paper</a><a href="https://github.com/Priyanshu-econ/MENA-FFS-REC-">Replication code</a></p>
+        <p class="title">Assessing Keynesian and Wagnerian hypotheses in India: insights from a VAR model</p>
+        <p class="meta">with D. Mehta and M. Bhatt. <i>Arthshastra Indian Journal of Economics &amp; Research</i>, 2026, 8–21.</p>
+        <p class="links"><a href="https://doi.org/10.17010/aijer/2026/v15il/174432">Paper</a></p>
       </li>
       <li>
         <p class="title">Sustainable growth and CO<sub>2</sub> emissions: quantile impacts of complexity, mobile subscriptions, and renewable energy</p>
-        <p class="meta">Patel, N., Mehta, D., <b>Chavda, P.</b> and Bhatt, M. (2026). <i>Journal of Quantitative Economics</i>.</p>
-        <p class="actions"><a href="https://doi.org/10.1007/s40953-026-00520-x">Paper</a></p>
+        <p class="meta">with N. Patel, D. Mehta and M. Bhatt. <i>Journal of Quantitative Economics</i>, 2026.</p>
+        <p class="links"><a href="https://doi.org/10.1007/s40953-026-00520-x">Paper</a></p>
+      </li>
+      <li>
+        <p class="title">Impact of fossil fuel subsidies, natural resource rent and corruption on renewable energy in Middle Eastern and North African countries</p>
+        <p class="meta">with D. Mehta. <i>Asia-Pacific Journal of Regional Science</i>, 2026, 10(1), 21.</p>
+        <p class="links"><a href="https://doi.org/10.1007/s41685-026-00424-x">Paper</a><a href="https://github.com/Priyanshu-econ/MENA-FFS-REC-">Replication code</a></p>
       </li>
       <li>
         <p class="title">Impact of green trade and renewable energy on ecological footprint in India</p>
-        <p class="meta"><b>Chavda, P.</b> and Mehta, D. (2025). <i>Journal of Quantitative Economics</i>.</p>
-        <p class="actions"><a href="https://doi.org/10.1007/s40953-025-00477-3">Paper</a></p>
+        <p class="meta">with D. Mehta. <i>Journal of Quantitative Economics</i>, 2025.</p>
+        <p class="links"><a href="https://doi.org/10.1007/s40953-025-00477-3">Paper</a><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5057184">SSRN</a></p>
       </li>
       <li>
-        <p class="title">Fossil fuel subsidies, environmental tax, and renewable energy consumption in OECD countries: a panel quantile approach</p>
-        <p class="meta"><b>Chavda, P.</b> and Mehta, D. (2025). <i>Next Energy</i>, 8, 100313.</p>
-        <p class="actions"><a href="https://doi.org/10.1016/j.nxener.2025.100313">Paper</a></p>
+        <p class="title">Assessing the impact of fossil fuel subsidies and environmental tax on renewable energy consumption of OECD countries: a panel quantile approach</p>
+        <p class="meta">with D. Mehta. <i>Next Energy</i>, 2025, 8, 100313.</p>
+        <p class="links"><a href="https://doi.org/10.1016/j.nxener.2025.100313">Paper</a></p>
+      </li>
+    </ol>
+
+    <h3>Conference presentations</h3>
+    <ol class="entries dated">
+      <li>
+        <span class="date">Apr 2026</span>
+        <div>
+          <p class="title">A club convergence analysis of energy security index: evidence from Indian states</p>
+          <p class="meta">1st IAEE International Student Conference, online</p>
+          <p class="links"><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_8d06f64604734261bede5136410d30fa.pdf">Slides</a></p>
+        </div>
+      </li>
+      <li>
+        <span class="date">Feb 2026</span>
+        <div>
+          <p class="title">Decarbonizing the energy sector: the role of environmental policy and renewable energy in reducing energy sector emissions</p>
+          <p class="meta">60th Annual Conference of The Indian Econometric Society, Kolhapur</p>
+          <p class="links"><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_56d49d51f5cf442cb16e3affdba75222.pdf">Slides</a></p>
+        </div>
+      </li>
+      <li>
+        <span class="date">May 2025</span>
+        <div>
+          <p class="title">Impact of economic complexity and energy intensity on environmental sustainability: evidence from India</p>
+          <p class="meta">Management Education and Research Colloquium (MERC), IIM Kashipur</p>
+          <p class="links"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5271860">SSRN</a><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_aaac8568ad8248ae9548e59adb7fd066.pdf">Slides</a></p>
+        </div>
+      </li>
+      <li>
+        <span class="date">Dec 2024</span>
+        <div>
+          <p class="title">Impact of green trade, technological innovation and renewable energy on India's ecological footprint</p>
+          <p class="meta">Vietnam Symposium in Climate Transition, University of Danang, Vietnam</p>
+          <p class="links"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5057184">SSRN</a><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_088bb038fd5947a4ad3294a227dcfb02.pdf">Slides</a></p>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Research projects</h3>
+    <ol class="entries dated">
+      <li>
+        <span class="date">2026–27</span>
+        <div>
+          <p class="title">Environmental Sustainability Stress Index: a study of Gujarat's districts</p>
+          <p class="meta">Research Assistant. Funded by the Gujarat Rajya Transformation Institute (GRIT). PI: Dr. Dhyani Mehta, Co-PI: Dr. Himani Baxi.</p>
+        </div>
+      </li>
+      <li>
+        <span class="date">2024</span>
+        <div>
+          <p class="title">16th State Finance Commission report, Gujarat</p>
+          <p class="meta">Research Assistant to Dr. Himani Joshi, Pandit Deendayal Energy University.</p>
+        </div>
+      </li>
+      <li>
+        <span class="date">2023–24</span>
+        <div>
+          <p class="title">ICSSR-sponsored research on millets</p>
+          <p class="meta">Student Research Assistant to Prof. Nausheen Nizami, Pandit Deendayal Energy University.</p>
+        </div>
+      </li>
+      <li>
+        <span class="date">2023</span>
+        <div>
+          <p class="title">Research projects at Gujarat National Law University</p>
+          <p class="meta">Student Research Assistant to Dr. Hitesh Thakkar.</p>
+        </div>
+      </li>
+      <li>
+        <span class="date">2023</span>
+        <div>
+          <p class="title">Primary education and public debt in Gujarat</p>
+          <p class="meta">Student Research Assistant, Directorate of Economics and Statistics, Government of Gujarat.</p>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Code and data</h3>
+    <ol class="entries">
+      <li>
+        <p class="title"><a href="https://github.com/Priyanshu-econ/Fiscal-Consolidation-at-the-cost-of-development-">Fiscal consolidation at the cost of development?</a></p>
+        <p class="meta">Stata code and data comparing state fiscal health with human development and SDG scores across Indian states.</p>
       </li>
     </ol>
   </section>
 
-  <section id="presentations">
-    <h2>Conference presentations</h2>
-    <ul class="talks">
+  <section id="teaching">
+    <h2>Teaching</h2>
+    <p class="note">Visiting faculty</p>
+    <ol class="entries dated">
       <li>
-        <span class="when">Apr 2026</span>
+        <span class="date">2025–27</span>
         <div>
-          <p class="title">Club convergence of an energy security index across Indian states</p>
-          <p class="meta">1st IAEE International Student Conference, online</p>
-          <p class="actions"><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_8d06f64604734261bede5136410d30fa.pdf">Slides</a></p>
+          <p class="title">Introduction to Econometrics</p>
+          <p class="meta">MSc Big Data Analytics, Department of Data Science, St. Xavier's College, Ahmedabad</p>
         </div>
       </li>
       <li>
-        <span class="when">Feb 2026</span>
+        <span class="date">2025–26</span>
         <div>
-          <p class="title">Environmental policy, renewable energy, and energy-sector emissions</p>
-          <p class="meta">60th Annual Conference of The Indian Econometric Society, Shivaji University, Kolhapur</p>
-          <p class="actions"><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_56d49d51f5cf442cb16e3affdba75222.pdf">Slides</a></p>
+          <p class="title">Introduction to Econometrics; Introduction to Public Finance</p>
+          <p class="meta">MBA, Department of Public Policy and Governance, B.K. School of Business, Ahmedabad</p>
         </div>
       </li>
-      <li>
-        <span class="when">May 2025</span>
-        <div>
-          <p class="title">Economic complexity, energy intensity, and environmental sustainability in India</p>
-          <p class="meta">Management Education and Research Colloquium (MERC), IIM Kashipur</p>
-          <p class="actions"><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_aaac8568ad8248ae9548e59adb7fd066.pdf">Slides</a></p>
-        </div>
-      </li>
-      <li>
-        <span class="when">Dec 2024</span>
-        <div>
-          <p class="title">Green trade, technological innovation, and renewable energy: effects on India's ecological footprint</p>
-          <p class="meta">Vietnam Symposium in Climate Transition, University of Danang, Vietnam</p>
-          <p class="actions"><a href="https://40ad8dc7-2496-4c82-b9a4-593c0dc9b513.filesusr.com/ugd/23a3aa_088bb038fd5947a4ad3294a227dcfb02.pdf">Slides</a></p>
-        </div>
-      </li>
-    </ul>
+    </ol>
   </section>
 
-  <section id="experience">
-    <h2>Research experience</h2>
-    <ul class="talks">
-      <li>
-        <span class="when">2024</span>
-        <div>
-          <p class="title">Research Assistant, Pandit Deendayal Energy University</p>
-          <p class="meta">With Dr. Himani Joshi on the report of the 16th State Finance Commission of Gujarat: data collection, cleaning, and visualization.</p>
-        </div>
-      </li>
-      <li>
-        <span class="when">2023–24</span>
-        <div>
-          <p class="title">Student Research Assistant, Pandit Deendayal Energy University</p>
-          <p class="meta">With Prof. Nausheen Nizami on an ICSSR-sponsored project.</p>
-        </div>
-      </li>
-      <li>
-        <span class="when">2023</span>
-        <div>
-          <p class="title">Student Research Assistant, Gujarat National Law University</p>
-          <p class="meta">With Dr. Hitesh Thakkar: data cleaning, visualization, and analysis.</p>
-        </div>
-      </li>
-      <li>
-        <span class="when">2023</span>
-        <div>
-          <p class="title">Student Research Assistant, Directorate of Economics and Statistics, Government of Gujarat</p>
-          <p class="meta">Reports on primary education in Gujarat and on the effect of public debt on Gujarat's GSDP growth.</p>
-        </div>
-      </li>
-    </ul>
+  <section id="background">
+    <h2>Background</h2>
+    <div class="cols">
+      <div>
+        <h3>Education</h3>
+        <ol class="entries dated tight">
+          <li><span class="date">2024–</span><div><p class="title">PhD, Economics</p><p class="meta">Pandit Deendayal Energy University</p></div></li>
+          <li><span class="date">2022–24</span><div><p class="title">M.A., Economics</p><p class="meta">Pandit Deendayal Energy University. Gold medalist.</p></div></li>
+          <li><span class="date">2019–22</span><div><p class="title">B.A., Economics</p><p class="meta">L.D. Arts College, Gujarat University. First class with distinction.</p></div></li>
+        </ol>
+      </div>
+      <div>
+        <h3>Also</h3>
+        <dl class="facts">
+          <div><dt>Software</dt><dd>EViews, Stata, Python, R, Tableau</dd></div>
+          <div><dt>Qualified</dt><dd>UGC NET (2023), GSET (2023)</dd></div>
+          <div><dt>Member</dt><dd>International Association for Energy Economics; The Econometric Society</dd></div>
+          <div><dt>Languages</dt><dd>English, Hindi, Gujarati</dd></div>
+        </dl>
+      </div>
+    </div>
   </section>
-
-  <section id="code">
-    <h2>Code and data</h2>
-    <ul class="repos">
-      <li>
-        <a class="title" href="https://github.com/Priyanshu-econ/MENA-FFS-REC-">Fossil fuel subsidies and renewable energy in MENA</a>
-        <p class="meta">Stata replication files for the <i>Asia-Pacific Journal of Regional Science</i> paper.</p>
-      </li>
-      <li>
-        <a class="title" href="https://github.com/Priyanshu-econ/Fiscal-Consolidation-at-the-cost-of-development-">Fiscal consolidation at the cost of development?</a>
-        <p class="meta">Stata code and data behind a blog post relating fiscal health to human development and SDG scores across Indian states.</p>
-      </li>
-    </ul>
-  </section>
-
-  <footer class="foot">
-    <p>Department of Economics, School of Liberal Studies, Pandit Deendayal Energy University, Gandhinagar, Gujarat 382007, India</p>
-  </footer>
 
 </main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <p>Department of Economics, School of Liberal Studies<br>Pandit Deendayal Energy University, Gandhinagar, Gujarat, India</p>
+    <p><a href="mailto:priyanshu.chavda2002@gmail.com">priyanshu.chavda2002@gmail.com</a></p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.querySelector('.theme');
+    function label() {
+      var dark = root.getAttribute('data-theme') === 'dark';
+      btn.setAttribute('aria-label', dark ? 'Switch to day mode' : 'Switch to night mode');
+    }
+    label();
+    // Enable color transitions only after first paint, so the page never flashes on load.
+    requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add('ready'); }); });
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      label();
+    });
+
+    // Underline the section you're reading in the top bar.
+    var links = document.querySelectorAll('.nav-links a[href^="#"]');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          links.forEach(function (a) { a.classList.toggle('current', a.getAttribute('href') === '#' + e.target.id); });
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      ['about', 'research', 'teaching'].forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+    }
+  })();
+</script>
 </body>
 </html>

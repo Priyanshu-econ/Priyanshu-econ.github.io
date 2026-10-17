@@ -9,5 +9,5 @@ Plain HTML and CSS, no build step. GitHub Pages serves it straight from the `mai
 - **Text and lists:** edit `index.html`. Each publication, talk, and repo is one `<li>` block; copy an existing one to add a new entry.
 - **Colors and fonts:** edit the variables at the top of `style.css`.
 - **Photo:** add `photo.jpg` to this folder and uncomment the `<img class="portrait">` line in `index.html`.
-- **CV:** add your CV as `files/cv.pdf` and point the "CV (PDF)" link in `index.html` to `files/cv.pdf`.
-- **Profiles:** uncomment the Google Scholar / ORCID / LinkedIn links in `index.html` and fill in your IDs.
+- **CV:** replace `files/Priyanshu_Chavda_CV.pdf` with the new version (keep the same file name).
+- **Day / night:** the site follows the visitor's clock (night 7 pm to 6 am) until they press the sun/moon button; colors live at the top of `style.css`.
