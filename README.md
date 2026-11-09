@@ -11,3 +11,12 @@ Plain HTML and CSS, no build step. GitHub Pages serves it straight from the `mai
 - **Photo:** add `photo.jpg` to this folder and uncomment the `<img class="portrait">` line in `index.html`.
 - **CV:** replace `files/Priyanshu_Chavda_CV.pdf` with the new version (keep the same file name).
 - **Day / night:** the site follows the visitor's clock (night 7 pm to 6 am) until they press the sun/moon button; colors live at the top of `style.css`.
+
+## Energy Security Index (`esi/`)
+
+The ESI dashboard lives at https://priyanshu-econ.github.io/esi/. To update it with new data:
+
+1. Replace `esi/code/esi_inputs.csv` (one row per country-year, the eight raw indicators and their `_filled` flags).
+2. Run `python esi/code/build_esi.py` to rebuild the index, `esi/data/esi.json` and every file in `esi/downloads/`.
+3. Run `python esi/code/docs/make_methodology.py` to rebuild the methodology PDF (needs Playwright with Chromium).
+4. If the release changes, bump `VERSION` in `build_esi.py` and keep the old download files so earlier versions stay citable.
