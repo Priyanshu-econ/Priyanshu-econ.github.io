@@ -5,6 +5,8 @@ Output: esi/data/esi.json        (data for the dashboard)
         esi/downloads/*.csv, *.xlsx
 
 Method (see the methodology PDF for the reasoning):
+  0. Energy CPI inflation is winsorised at the pooled 1st and 99th percentiles before normalisation
+     (skewness 30, kurtosis 934: one hyperinflation episode would otherwise compress every other score).
   1. Min-max normalisation of each indicator over the pooled panel (all countries, all years),
      direction-adjusted so that 1 = most secure and 0 = least secure.
   2. Each dimension = arithmetic mean of its two normalised indicators (weight 0.5 each).
@@ -21,6 +23,7 @@ import numpy as np
 import pandas as pd
 
 VERSION = "1.0"
+WINSORISE = {"energy_cpi_inflation": (0.01, 0.99)}
 RELEASED = "2026-11"
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://priyanshu-econ.github.io/esi/"
@@ -56,8 +59,10 @@ def build():
     df = df.sort_values(["country", "year"]).reset_index(drop=True)
 
     # 1. Pooled, direction-adjusted min-max normalisation
+    for key, (ql, qh) in WINSORISE.items():
+        df[key + "_winsorised"] = df[key].clip(df[key].quantile(ql), df[key].quantile(qh))
     for key, _, _, sign, _, _ in INDICATORS:
-        x = df[key]
+        x = df[key + "_winsorised"] if key in WINSORISE else df[key]
         lo, hi = x.min(), x.max()
         df[key + "_score"] = (x - lo) / (hi - lo) if sign > 0 else (hi - x) / (hi - lo)
 
@@ -98,7 +103,7 @@ def write(df):
     scores = r6(df[ids + ["esi", "esi_rank"] + [c for d in dims for c in (d, d + "_rank")]])
     ind_cols = []
     for key, *_ in INDICATORS:
-        ind_cols += [key, key + "_score", key + "_filled"]
+        ind_cols += [key] + ([key + "_winsorised"] if key in WINSORISE else []) + [key + "_score", key + "_filled"]
     indicators = r6(df[ids + ind_cols])
     sens = r6(df[ids + ["esi", "esi_arithmetic", "esi_mc_mean", "esi_mc_p05", "esi_mc_p95"]])
 
@@ -112,6 +117,8 @@ def write(df):
     for key, label, dim, sign, unit, srcname in INDICATORS:
         dirn = "higher is more secure" if sign > 0 else "lower is more secure"
         code.append((key, f"{label} ({dim}), raw value", unit, dirn, srcname))
+        if key in WINSORISE:
+            code.append((key + "_winsorised", f"{label}, winsorised at the pooled 1st and 99th percentiles (used for the score)", unit, dirn, "Author's construction"))
         code.append((key + "_score", f"{label}, min-max score (1 = most secure)", "0 to 1", "", "Author's construction"))
         code.append((key + "_filled", f"{label}: 1 if the raw source had no value and it was interpolated or carried forward", "0/1", "", ""))
     code += [("esi_arithmetic", "Sensitivity: arithmetic mean of the four dimensions", "0 to 1", "", ""),
@@ -132,7 +139,9 @@ def write(df):
         CITE_PAPER,
         CITE_DATA,
         "",
-        "Licence: Creative Commons Attribution 4.0 International (CC BY 4.0).",
+        "Copyright (c) 2026 Priyanshu Chavda. The ESI data are released under the Creative Commons Attribution 4.0",
+        "International licence (CC BY 4.0): you may reuse them with attribution (cite the paper and the dataset).",
+        "Energy CPI inflation is winsorised at the pooled 1st and 99th percentiles before normalisation.",
         "Raw indicators come from the World Bank, Our World in Data and the U.S. EIA; see the Codebook for each source.",
         "",
         "Sheets: Scores (ESI, dimensions, ranks), Indicators (raw values, scores, fill flags),",

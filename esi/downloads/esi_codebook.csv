@@ -28,6 +28,7 @@ gdppc_growth,"GDP per capita growth (Affordability), raw value",annual %,higher 
 gdppc_growth_score,"GDP per capita growth, min-max score (1 = most secure)",0 to 1,,Author's construction
 gdppc_growth_filled,GDP per capita growth: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
 energy_cpi_inflation,"Energy CPI inflation (Affordability), raw value",annual %,lower is more secure,"World Bank, Global Database of Inflation (energy CPI inflation)"
+energy_cpi_inflation_winsorised,"Energy CPI inflation, winsorised at the pooled 1st and 99th percentiles (used for the score)",annual %,lower is more secure,Author's construction
 energy_cpi_inflation_score,"Energy CPI inflation, min-max score (1 = most secure)",0 to 1,,Author's construction
 energy_cpi_inflation_filled,Energy CPI inflation: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
 ghg_per_capita,"GHG emissions per capita (Acceptability), raw value",t CO2e per person,lower is more secure,"World Bank, World Development Indicators (EN.GHG.ALL.PC.CE.AR5)"

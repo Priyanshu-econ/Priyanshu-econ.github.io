@@ -4,9 +4,18 @@
 
   var NS = 'http://www.w3.org/2000/svg';
   var FONT = 'Geist, system-ui, -apple-system, "Segoe UI", sans-serif';
-  var SOURCE = 'Source: Chavda (2026), Energy Security Index v1.0, priyanshu-econ.github.io/esi · CC BY 4.0';
+  var SOURCE = 'Source: © 2026 Priyanshu Chavda, Energy Security Index v1.0, priyanshu-econ.github.io/esi · CC BY 4.0, cite when reused';
   var D, META, YEARS, BYISO = {}, WORLD;
-  var state = { measure: 'esi', year: 2024, country: 'IND', cmpMeasure: 'esi', cmp: ['IND', 'CHN', 'USA'] };
+  var state = { measure: 'esi', year: 2024, country: null, picked: false, cmpMeasure: 'esi', cmp: [], filter: null };
+  var REGIONS = {
+    'Europe': ['BEL', 'DNK', 'FIN', 'FRA', 'DEU', 'HUN', 'ITA', 'NLD', 'NOR', 'POL', 'PRT', 'ESP', 'SWE', 'CHE', 'GBR', 'UKR', 'RUS', 'TUR'],
+    'Americas': ['ARG', 'BRA', 'CAN', 'CHL', 'COL', 'MEX', 'PER', 'USA', 'VEN'],
+    'Asia and Pacific': ['AUS', 'CHN', 'IND', 'IDN', 'JPN', 'MYS', 'PHL', 'KOR', 'THA'],
+    'Middle East and Africa': ['EGY', 'ISR', 'SAU', 'ZAF']
+  };
+  function inFilter(c) { return !state.filter || !!state.filter[c.iso3]; }
+  function shown() { return D.countries.filter(inFilter); }
+  function filterNote() { var n = shown().length; return n === D.countries.length ? '' : ' Showing ' + n + ' of ' + D.countries.length + ' countries; ranks are among all ' + D.countries.length + '.'; }
 
   // ---------- helpers ----------
   function $(s, r) { return (r || document).querySelector(s); }
@@ -140,13 +149,13 @@
   // ---------- 1. Map ----------
   function drawMap() {
     var fig = $('[data-fig="map"]'), m = M(state.measure), i = yi(state.year), cl = classes(m.score);
-    heads(fig, m.label + ', ' + state.year, 'Score from 0 (least secure) to 1 (most secure); five classes from the pooled 2000–2024 distribution. Hatched countries are outside the sample.');
+    heads(fig, m.label + ', ' + state.year, 'Score from 0 (least secure) to 1 (most secure); five classes from the pooled 2000–2024 distribution. Hatched countries are outside the sample.' + filterNote());
     var svg = newSvg(fig, WORLD.w, WORLD.h); hatchDef(svg);
     el('rect', { x: 0, y: 0, width: WORLD.w, height: WORLD.h, fill: css('--viz-surface') }, svg);
     var g = el('g', {}, svg), surf = css('--viz-surface');
     WORLD.c.forEach(function (f) {
-      var c = BYNUM[f.id];
-      var p = el('path', { d: f.d, fill: c ? cl.color(c.v[m.score][i]) : 'url(#hatch)', stroke: surf, 'stroke-width': .6 }, g);
+      var c = BYNUM[f.id], off = c && !inFilter(c);
+      var p = el('path', { d: f.d, fill: c ? (off ? css('--viz-empty') : cl.color(c.v[m.score][i])) : 'url(#hatch)', stroke: surf, 'stroke-width': .6 }, g);
       if (c) {
         p.style.cursor = 'pointer';
         p.setAttribute('tabindex', '0');
@@ -165,8 +174,8 @@
   // ---------- 2. Ranking ----------
   function drawRank() {
     var fig = $('[data-fig="rank"]'), m = M(state.measure), i = yi(state.year), cl = classes(m.score);
-    heads(fig, 'Ranking, ' + state.year, m.label + ', score 0–1. Click a bar to open that country.');
-    var rows = D.countries.map(function (c) { return { c: c, v: c.v[m.score][i] }; }).sort(function (a, b) { return b.v - a.v; });
+    heads(fig, 'Ranking, ' + state.year, m.label + ', score 0–1. Click a bar to open that country.' + filterNote());
+    var rows = shown().map(function (c) { return { c: c, v: c.v[m.score][i] }; }).sort(function (a, b) { return b.v - a.v; });
     var W = plotWidth(fig), bh = 13, gap = 4, top = 4, left = Math.min(118, W * .34), right = 46, H = top + rows.length * (bh + gap) + 18;
     var svg = newSvg(fig, W, H), x = function (v) { return left + (W - left - right) * v; };
     el('rect', { x: 0, y: 0, width: W, height: H, fill: css('--viz-surface') }, svg);
@@ -175,10 +184,10 @@
       txt(svg, x(t), H - 3, fmt(t, 2), { anchor: 'middle', size: 10 });
     });
     rows.forEach(function (r, k) {
-      var y = top + k * (bh + gap), sel = r.c.iso3 === state.country, w = Math.max(0, x(r.v) - left);
-      var g = el('g', { tabindex: 0, 'aria-label': (k + 1) + '. ' + r.c.name + ' ' + fmt(r.v, 3) }, svg); g.style.cursor = 'pointer';
+      var y = top + k * (bh + gap), sel = state.picked && r.c.iso3 === state.country, rk = rankOf(r.c, m, i), w = Math.max(0, x(r.v) - left);
+      var g = el('g', { tabindex: 0, 'aria-label': rk + '. ' + r.c.name + ' ' + fmt(r.v, 3) }, svg); g.style.cursor = 'pointer';
       el('rect', { x: 0, y: y - gap / 2, width: W, height: bh + gap, fill: 'transparent' }, g);
-      txt(g, left - 8, y + bh / 2 + .5, (k + 1) + '  ' + r.c.name, { anchor: 'end', size: 11, fill: sel ? css('--viz-ink') : css('--viz-ink-2'), weight: sel ? 600 : null, base: 'middle' });
+      txt(g, left - 8, y + bh / 2 + .5, rk + '  ' + r.c.name, { anchor: 'end', size: 11, fill: sel ? css('--viz-ink') : css('--viz-ink-2'), weight: sel ? 600 : null, base: 'middle' });
       // 4px rounded data end, square at the baseline
       var rr = Math.min(4, w / 2);
       el('path', { d: 'M' + left + ',' + y + 'h' + (w - rr) + 'a' + rr + ',' + rr + ' 0 0 1 ' + rr + ',' + rr + 'v' + (bh - 2 * rr) + 'a' + rr + ',' + rr + ' 0 0 1 -' + rr + ',' + rr + 'h-' + (w - rr) + 'z', fill: cl.color(r.v) }, g);
@@ -196,7 +205,7 @@
     var tb = t.createTBody();
     rows.forEach(function (r, k) {
       var tr = tb.insertRow();
-      [String(k + 1), r.c.name, fmt(r.v, 3)].concat(m.raw ? [rawFmt(r.c.v[m.raw][i])] : []).forEach(function (s) { tr.appendChild(h('td', null, s)); });
+      [String(rankOf(r.c, m, i)), r.c.name, fmt(r.v, 3)].concat(m.raw ? [rawFmt(r.c.v[m.raw][i])] : []).forEach(function (s) { tr.appendChild(h('td', null, s)); });
     });
     var box = $('.tablev .scroll', fig); box.innerHTML = ''; box.appendChild(t);
   }
@@ -204,13 +213,13 @@
   // ---------- 3. Heatmap, countries by year ----------
   function drawHeat() {
     var fig = $('[data-fig="heat"]'), m = M(state.measure), cl = classes(m.score), i = yi(state.year);
-    heads(fig, m.label + ', all years', 'Rows sorted by the ' + state.year + ' score. Same colour classes as the map.');
-    var rows = D.countries.slice().sort(function (a, b) { return b.v[m.score][i] - a.v[m.score][i]; });
+    heads(fig, m.label + ', all years', 'Rows sorted by the ' + state.year + ' score. Same colour classes as the map.' + filterNote());
+    var rows = shown().sort(function (a, b) { return b.v[m.score][i] - a.v[m.score][i]; });
     var W = plotWidth(fig), left = 92, top = 4, ch = 13, bottom = 20, cw = (W - left - 4) / YEARS.length, H = top + rows.length * ch + bottom;
     var svg = newSvg(fig, W, H); el('rect', { x: 0, y: 0, width: W, height: H, fill: css('--viz-surface') }, svg);
     var surf = css('--viz-surface');
     rows.forEach(function (c, r) {
-      var y = top + r * ch, sel = c.iso3 === state.country;
+      var y = top + r * ch, sel = state.picked && c.iso3 === state.country;
       txt(svg, left - 6, y + ch / 2 + .5, c.name, { anchor: 'end', size: 10, base: 'middle', fill: sel ? css('--viz-ink') : css('--viz-ink-2'), weight: sel ? 600 : null });
       YEARS.forEach(function (yr, j) {
         var v = c.v[m.score][j];
@@ -425,7 +434,7 @@
   function drawAll() { drawMap(); drawRank(); drawHeat(); drawCountry(); drawCompare(); }
   function drawYearViews() { drawMap(); drawRank(); drawHeat(); }
   function setCountry(iso, scroll) {
-    state.country = iso; $('#country-sel').value = iso;
+    state.country = iso; state.picked = true; $('#country-sel').value = iso;
     drawRank(); drawHeat(); drawCountry();
     if (scroll) $('#country').scrollIntoView({ behavior: 'smooth' });
   }
@@ -452,6 +461,34 @@
     $('#sens-text').textContent = 'Under 1,000 random weightings of the four dimensions, the average country moves ' + fmt(S.shift_mean, 2) + ' places in the yearly ranking (at most ' + S.shift_max + '). The geometric ESI correlates ' + fmt(S.pearson_arith, 2) + ' with an arithmetic version (rank correlation ' + fmt(S.spearman_arith, 2) + '), and the gap reflects how much more the geometric mean penalises one weak dimension.' + (S.pearson_z ? ' It correlates ' + fmt(S.pearson_z, 2) + ' with a z-score version and ' + fmt(S.pearson_pca, 2) + ' with a PCA-weighted version.' : '');
   }
 
+  function buildFilter(sorted) {
+    var box = $('#cf-list'), pre = $('#cf-presets'), sum = $('#cf-sum');
+    function sync() {
+      var n = shown().length;
+      sum.textContent = n === D.countries.length ? 'All ' + n : n + ' of ' + D.countries.length;
+      $$('input', box).forEach(function (cb) { cb.checked = inFilter(BYISO[cb.value]); });
+      drawYearViews();
+    }
+    function setSet(list) {
+      if (!list) { state.filter = null; }
+      else { state.filter = {}; list.forEach(function (iso) { state.filter[iso] = true; }); }
+      sync();
+    }
+    sorted.forEach(function (c) {
+      var l = h('label'), cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.value = c.iso3; cb.checked = true;
+      cb.addEventListener('change', function () {
+        var cur = {}; D.countries.forEach(function (o) { if (inFilter(o)) cur[o.iso3] = true; });
+        if (cb.checked) cur[c.iso3] = true; else delete cur[c.iso3];
+        var keys = Object.keys(cur); setSet(keys.length === D.countries.length ? null : keys);
+      });
+      l.appendChild(cb); l.appendChild(document.createTextNode(' ' + c.name)); box.appendChild(l);
+    });
+    [['All', null], ['None', []]].concat(Object.keys(REGIONS).map(function (r) { return [r, REGIONS[r]]; })).forEach(function (p) {
+      var b = h('button', 'btn small', p[0]); b.type = 'button'; b.addEventListener('click', function () { setSet(p[1]); }); pre.appendChild(b);
+    });
+  }
+
   function init() {
     tip = $('#tip');
     MEASURES = measures();
@@ -464,7 +501,10 @@
     sorted.forEach(function (c) { var o = document.createElement('option'); o.value = c.iso3; o.textContent = c.name; cs.appendChild(o); });
     var o0 = document.createElement('option'); o0.value = ''; o0.textContent = 'Choose…'; ca.appendChild(o0);
     sorted.forEach(function (c) { var o = document.createElement('option'); o.value = c.iso3; o.textContent = c.name; ca.appendChild(o); });
-    var hash = (location.hash.match(/country=([A-Z]{3})/) || [])[1]; if (hash && BYISO[hash]) state.country = hash;
+    state.country = sorted[0].iso3;
+    state.cmp = sorted.slice(0, 3).map(function (c) { return c.iso3; });
+    var hash = (location.hash.match(/country=([A-Z]{3})/) || [])[1]; if (hash && BYISO[hash]) { state.country = hash; state.picked = true; }
+    buildFilter(sorted);
     cs.value = state.country;
 
     $('#measure').addEventListener('change', function (e) { state.measure = e.target.value; drawYearViews(); });

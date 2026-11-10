@@ -16,6 +16,10 @@ sc = pd.read_csv(ROOT / "downloads" / "esi_scores.csv")
 e = html.escape
 
 filled = {i["key"]: ind[i["key"] + "_filled"].mean() * 100 for i in M["indicators"]}
+raw_cpi = ind.energy_cpi_inflation
+cpi_lo, cpi_hi = raw_cpi.quantile(0.01), raw_cpi.quantile(0.99)
+cpi_n = int(((raw_cpi < cpi_lo) | (raw_cpi > cpi_hi)).sum())
+cpi_share_raw = (((raw_cpi.max() - raw_cpi) / (raw_cpi.max() - raw_cpi.min())) > 0.99).mean() * 100
 cpi_share = (ind.energy_cpi_inflation_score > 0.99).mean() * 100
 cpi_max = ind.loc[ind.energy_cpi_inflation.idxmax()]
 dimstats = sc[["availability", "accessibility", "affordability", "acceptability", "esi"]].describe().T
@@ -95,7 +99,8 @@ ul {{ margin: 0 0 8pt; padding-left: 16pt; }} li {{ margin-bottom: 3pt; }}
 <p class="eq">p<sub>it</sub> = (x<sub>it</sub> − min x) / (max x − min x) &nbsp;&nbsp;(1) &nbsp;&nbsp;&nbsp;&nbsp; p<sub>it</sub> = (max x − x<sub>it</sub>) / (max x − min x) &nbsp;&nbsp;(2)</p>
 <p><b>Why min–max.</b> It gives bounded, non-negative scores, which the geometric aggregation in Section 7 requires (z-scores can be negative and cannot enter a geometric mean). It keeps the relative distances between observations, and it is the method used in established indices such as the Human Development Index (UNDP, 2025).</p>
 <p><b>Why pooled.</b> The minimum and maximum are taken over all countries and all years together, not year by year. A score of 0.6 therefore means the same thing in 2000 and in 2024, and changes over time reflect real changes in the indicators rather than changes in the yearly best and worst performers.</p>
-<p><b>What it implies.</b> Scores are relative to this sample: 1 is the best value observed among these 40 countries over 2000–2024, not an absolute target, and adding countries or years would change the scores. Min–max is also sensitive to extreme values. The clearest case is energy CPI inflation, whose maximum is Venezuela's hyperinflation in {int(cpi_max.year)} ({cpi_max.energy_cpi_inflation:,.0f}%); as a result {cpi_share:.1f}% of country-years score above 0.99 on this indicator, and differences in Affordability come mainly from GDP per capita growth.</p>
+<p><b>What it implies.</b> Scores are relative to this sample: 1 is the best value observed among these 40 countries over 2000–2024, not an absolute target, and adding countries or years would change the scores. Min–max is also sensitive to extreme values, which is why energy CPI inflation is treated first (next paragraph).</p>
+<p><b>Outlier treatment: energy CPI inflation.</b> Energy CPI inflation is extremely skewed (skewness {raw_cpi.skew():.1f}, kurtosis {raw_cpi.kurt():.0f}) because of hyperinflation episodes, above all Venezuela in {int(cpi_max.year)} ({cpi_max.energy_cpi_inflation:,.0f}%). Left untreated, that single value sets the maximum, {cpi_share_raw:.1f}% of country-years score above 0.99, and the indicator stops distinguishing countries. Extreme values can become unintended benchmarks under min–max (OECD, 2008), and the JRC statistical audits of composite indicators treat an indicator when its absolute skewness exceeds 2.25 and its kurtosis exceeds 3.5 (Saisana et al., 2018). Energy CPI inflation is therefore winsorised at its pooled 1st and 99th percentiles ({cpi_lo:.2f}% and {cpi_hi:.2f}%; {cpi_n} of {len(raw_cpi):,} values) before normalisation. After treatment {cpi_share:.1f}% of country-years score above 0.99. No other indicator is treated. The raw values are kept in the data files, next to the winsorised series used for the score.</p>
 
 <h2>6. Weighting: equal weights</h2>
 <p>Each of the four dimensions receives a weight of 0.25, and the two indicators within each dimension receive 0.5 each, so every indicator carries an overall weight of 0.125 (12.5%). Equal weighting is the standard choice when neither theory nor evidence gives a clear reason to rank one dimension above another (OECD, 2008), and it keeps the index transparent. Section 8 shows how much the results depend on this choice.</p>
@@ -112,6 +117,8 @@ ul {{ margin: 0 0 8pt; padding-left: 16pt; }} li {{ margin-bottom: 3pt; }}
 <p><b>Weights.</b> The ESI was recomputed 1,000 times with random dimension weights (drawn uniformly and rescaled to sum to one; random seed 123). The mean of the simulated index is {S['mc_mean']:.3f} against {S['base_mean']:.3f} for the baseline. Across all country-years the average country moves {S['shift_mean']:.2f} places in the yearly ranking (standard deviation {S['shift_sd']:.2f}, at most {S['shift_max']} places), so the rankings do not hinge on equal weighting. The 5th–95th percentile range of the simulated index is reported for every country-year in the sensitivity file and shown as a band on the website.</p>
 <p><b>Aggregation.</b> An arithmetic mean of the four dimensions correlates {S['pearson_arith']:.2f} with the geometric ESI (Spearman rank correlation {S['spearman_arith']:.2f}). The difference is expected: the arithmetic mean lets strong Accessibility and Affordability scores offset weak Availability, which is precisely the compensation the geometric mean is designed to limit. With z-score normalisation in place of min–max (each dimension rescaled to [0, 1] before the geometric mean), the index correlates {S['pearson_z']:.2f} with the baseline (Spearman {S['spearman_z']:.2f}). With weights taken from a principal component analysis of the four dimensions, the correlation is {S['pearson_pca']:.2f} (Spearman {S['spearman_pca']:.2f}).</p>
 
+<p><b>Use in the paper.</b> In the accompanying paper the ESI is the dependent variable. Geopolitical risk is the country-specific index of Caldara and Iacoviello (2022), standardised within each country (its deviation from the country's 2000–2024 mean, divided by the country's standard deviation), because the raw levels depend on international press coverage and are not comparable across countries. A low- and high-security regime is defined by whether the ESI is above its pooled median.</p>
+
 <h2>9. Energy security in {int(sc.year.max())}</h2>
 <table style="break-inside:auto"><tr><th class="n">Rank</th><th>Country</th><th class="n">ESI</th><th class="n">Avail.</th><th class="n">Access.</th><th class="n">Afford.</th><th class="n">Accept.</th></tr>{rows_rank}</table>
 
@@ -120,7 +127,7 @@ ul {{ margin: 0 0 8pt; padding-left: 16pt; }} li {{ margin-bottom: 3pt; }}
 <li><b>ESI_dataset_v{e(M['version'])}.xlsx</b>: read me, scores, indicators, sensitivity and codebook in one workbook.</li>
 <li><b>esi_scores.csv</b>: ESI, four dimensions and yearly ranks. <b>esi_indicators.csv</b>: raw values, 0–1 scores and fill flags for the eight indicators. <b>esi_sensitivity.csv</b>: arithmetic aggregation and the random-weights mean, 5th and 95th percentiles. <b>esi_codebook.csv</b>: definition, unit, direction and source of every variable.</li>
 <li><b>Code</b>: <i>esi/code/build_esi.py</i> in the GitHub repository Priyanshu-econ/priyanshu-econ.github.io rebuilds the index and every file from the raw indicators in <i>esi_inputs.csv</i>.</li>
-<li><b>Licence</b>: CC BY 4.0 for the index and processed data. The raw indicators remain under their sources' terms: World Bank WDI and Global Database of Inflation (CC BY 4.0), Our World in Data (CC BY 4.0), U.S. EIA (public domain). Please credit those sources when you use the raw values.</li>
+<li><b>Copyright and licence</b>: © 2026 Priyanshu Chavda. The website, text, figures, this document and the paper are the author's copyright, all rights reserved. The index and processed data are released under CC BY 4.0, so they may be reused with attribution. The raw indicators remain under their sources' terms: World Bank WDI and Global Database of Inflation (CC BY 4.0), Our World in Data (CC BY 4.0), U.S. EIA (public domain). Please credit those sources when you use the raw values.</li>
 <li><b>Versions</b>: {e(M['version'])} ({e(M['released'])}), first public release. Any later revision will keep earlier versions available, so results can be reproduced with the version cited.</li>
 </ul>
 
@@ -128,10 +135,12 @@ ul {{ margin: 0 0 8pt; padding-left: 16pt; }} li {{ margin-bottom: 3pt; }}
 <div class="ref">
 <p>Ang, B. W., Choong, W. L., &amp; Ng, T. S. (2015). Energy security: Definitions, dimensions and indexes. <i>Renewable and Sustainable Energy Reviews</i>, 42, 1077–1093.</p>
 <p>APERC. (2007). <i>A quest for energy security in the 21st century: Resources and constraints</i>. Asia Pacific Energy Research Centre, Institute of Energy Economics, Japan.</p>
+<p>Caldara, D., &amp; Iacoviello, M. (2022). Measuring geopolitical risk. <i>American Economic Review</i>, 112(4), 1194–1225.</p>
 <p>Chentouf, M., &amp; Allouch, M. (2022). Environmental energy security in the MENA region: An aggregated composite index. <i>Environment, Development and Sustainability</i>, 24(9), 10945–10974.</p>
 <p>Cherp, A., &amp; Jewell, J. (2014). The concept of energy security: Beyond the four As. <i>Energy Policy</i>, 75, 415–421.</p>
 <p>Kruyt, B., van Vuuren, D. P., de Vries, H. J. M., &amp; Groenenberg, H. (2009). Indicators for energy security. <i>Energy Policy</i>, 37(6), 2166–2181.</p>
 <p>OECD. (2008). <i>Handbook on constructing composite indicators: Methodology and user guide</i>. OECD Publishing.</p>
+<p>Saisana, M., Domínguez-Torreiro, M., &amp; Vértesy, D. (2018). Joint Research Centre statistical audit of the 2018 Global Innovation Index. In S. Dutta, B. Lanvin, &amp; S. Wunsch-Vincent (Eds.), <i>The Global Innovation Index 2018: Energizing the world with innovation</i> (pp. 71–88). Cornell University, INSEAD and WIPO.</p>
 <p>UNDP. (2025). <i>Human development report 2025</i>. United Nations Development Programme.</p>
 </div>
 </body></html>"""
@@ -145,7 +154,7 @@ const {{ chromium }} = require('playwright');
   await p.goto('file://{out_html}', {{ waitUntil: 'networkidle' }});
   await p.pdf({{ path: '{ROOT / "downloads" / "ESI_methodology.pdf"}', format: 'A4', printBackground: true,
     displayHeaderFooter: true, headerTemplate: '<span></span>',
-    footerTemplate: '<div style="font:8px sans-serif;color:#888;width:100%;padding:0 20mm;display:flex;justify-content:space-between"><span>Energy Security Index v{M["version"]} · Methodology · Chavda (2026)</span><span class=pageNumber></span></div>',
+    footerTemplate: '<div style="font:8px sans-serif;color:#888;width:100%;padding:0 20mm;display:flex;justify-content:space-between"><span>Energy Security Index v{M["version"]} · Methodology · © 2026 Priyanshu Chavda</span><span class=pageNumber></span></div>',
     margin: {{ top: '22mm', bottom: '20mm', left: '20mm', right: '20mm' }} }});
   await b.close();
 }})();"""

@@ -179,3 +179,13 @@ details.tablev .scroll { max-height: 22rem; overflow: auto; margin-top: .5rem; }
 }
 
 @media (max-width: 480px) { header .brand { display: none; } header .nav-links { margin-right: auto; } }
+
+/* country filter */
+.cfilter { position: relative; }
+.cfilter > summary { list-style: none; cursor: pointer; font: .92rem var(--sans); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: .3rem 1.8rem .3rem .6rem; min-width: 8rem; position: relative; }
+.cfilter > summary::-webkit-details-marker { display: none; }
+.cfilter > summary::after { content: '\25BE'; position: absolute; right: .55rem; color: var(--muted); }
+.cf-panel { position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; width: min(34rem, calc(100vw - 32px)); background: var(--viz-surface, Canvas); border: 1px solid var(--line); border-radius: 8px; padding: .8rem; box-shadow: 0 8px 28px rgba(0,0,0,.14); }
+.cf-presets { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .7rem; }
+.cf-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: .2rem .8rem; max-height: 16rem; overflow: auto; font-size: .86rem; }
+.cf-list label { display: flex; align-items: center; gap: .35rem; cursor: pointer; }
