@@ -449,7 +449,7 @@
       [k % 2 === 0 ? i.dim : '', i.label, i.unit, i.dir > 0 ? 'Higher is more secure' : 'Lower is more secure', i.source].forEach(function (s, j) { var td = h('td', null, s); if (j) td.style.textAlign = 'left'; tr.appendChild(td); });
     });
     var S = META.sensitivity;
-    $('#sens-text').textContent = 'Under 1,000 random weightings of the four dimensions, the average country moves ' + fmt(S.shift_mean, 2) + ' places in the yearly ranking (at most ' + S.shift_max + '). The geometric ESI correlates ' + fmt(S.pearson_arith, 2) + ' with an arithmetic version (rank correlation ' + fmt(S.spearman_arith, 2) + '), and the gap reflects how much more the geometric mean penalises one weak dimension.';
+    $('#sens-text').textContent = 'Under 1,000 random weightings of the four dimensions, the average country moves ' + fmt(S.shift_mean, 2) + ' places in the yearly ranking (at most ' + S.shift_max + '). The geometric ESI correlates ' + fmt(S.pearson_arith, 2) + ' with an arithmetic version (rank correlation ' + fmt(S.spearman_arith, 2) + '), and the gap reflects how much more the geometric mean penalises one weak dimension.' + (S.pearson_z ? ' It correlates ' + fmt(S.pearson_z, 2) + ' with a z-score version and ' + fmt(S.pearson_pca, 2) + ' with a PCA-weighted version.' : '');
   }
 
   function init() {
