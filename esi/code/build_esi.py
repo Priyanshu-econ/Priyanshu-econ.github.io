@@ -169,12 +169,16 @@ def write(df):
     shift = (rk("esi") - rk("esi_mc_mean")).abs()
     sens_stats = {
         "pearson_arith": round(float(df.esi.corr(df.esi_arithmetic)), 3),
-        "spearman_arith": round(spear("esi", "esi_arithmetic"), 3),
+        "spearman_arith": round(float(df.esi.corr(df.esi_arithmetic, method="spearman")), 3),
         "base_mean": round(float(df.esi.mean()), 4), "base_sd": round(float(df.esi.std()), 4),
         "mc_mean": round(float(df.esi_mc_mean.mean()), 4), "mc_sd": round(float(df.esi_mc_mean.std()), 4),
         "shift_mean": round(float(shift.mean()), 2), "shift_max": int(round(shift.max())), "shift_sd": round(float(shift.std()), 3),
         "filled_share": round(float(df[[k + "_filled" for k, *_ in INDICATORS]].values.mean() * 100), 1),
     }
+    # z-score and PCA comparisons come from the paper's sensitivity notebook (ESI Uncertainty.ipynb)
+    rob = ROOT / "code" / "robustness.json"
+    if rob.exists():
+        sens_stats.update(json.loads(rob.read_text()))
     meta = {"version": VERSION, "sensitivity": sens_stats, "released": RELEASED, "years": years, "cite_paper": CITE_PAPER, "cite_data": CITE_DATA,
             "dimensions": DIMENSIONS,
             "indicators": [dict(key=k, label=l, dim=d, dir=s, unit=u, source=src) for k, l, d, s, u, src in INDICATORS]}
