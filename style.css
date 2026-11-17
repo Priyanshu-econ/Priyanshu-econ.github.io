@@ -138,6 +138,20 @@ h2 + h3, .note + .entries, .cols h3 { margin-top: 0; }
 }
 .links a:hover { border-color: var(--text); }
 
+/* Job market paper */
+.jmp-title { font-size: 1.45rem; max-width: 34em; }
+.abstract { margin: 1.1rem 0 0; max-width: 42em; }
+.abstract summary {
+  cursor: pointer; display: inline-flex; align-items: center; gap: .45rem;
+  font-size: .9rem; font-weight: 600; list-style: none;
+}
+.abstract summary::-webkit-details-marker { display: none; }
+.abstract summary::before { content: "+"; display: inline-block; width: 1em; text-align: center; color: var(--muted); }
+.abstract[open] summary::before { content: "\2212"; }
+.abstract summary:hover { text-decoration: underline; }
+.abstract p { margin: .75rem 0 0; color: var(--soft); line-height: 1.65; }
+#jmp .links { margin-top: 1.25rem; }
+
 .dated > li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem; }
 .date { color: var(--muted); font-size: .88rem; padding-top: .2rem; font-variant-numeric: tabular-nums; }
 .tight > li { padding: .8rem 0; }
