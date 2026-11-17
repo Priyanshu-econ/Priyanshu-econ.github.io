@@ -1,0 +1,43 @@
+variable,description,unit,direction,source
+country,Country name,,,
+iso3,ISO 3166-1 alpha-3 code,,,
+year,Calendar year,,,
+esi,Energy Security Index: geometric mean of the four dimensions,0 to 1,,Author's construction
+esi_rank,Rank of the ESI among the 40 countries in that year (1 = most secure),rank,,
+availability,Availability dimension: mean of its two indicator scores,0 to 1,,Author's construction
+availability_rank,Rank of Availability in that year (1 = most secure),rank,,
+accessibility,Accessibility dimension: mean of its two indicator scores,0 to 1,,Author's construction
+accessibility_rank,Rank of Accessibility in that year (1 = most secure),rank,,
+affordability,Affordability dimension: mean of its two indicator scores,0 to 1,,Author's construction
+affordability_rank,Rank of Affordability in that year (1 = most secure),rank,,
+acceptability,Acceptability dimension: mean of its two indicator scores,0 to 1,,Author's construction
+acceptability_rank,Rank of Acceptability in that year (1 = most secure),rank,,
+energy_use,"Energy use per capita (Availability), raw value",kWh per person,higher is more secure,Our World in Data (primary energy consumption per capita)
+energy_use_score,"Energy use per capita, min-max score (1 = most secure)",0 to 1,,Author's construction
+energy_use_filled,Energy use per capita: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+self_sufficiency,"Energy self-sufficiency (Availability), raw value",ratio of production to consumption,higher is more secure,"U.S. Energy Information Administration, International Energy Statistics"
+self_sufficiency_score,"Energy self-sufficiency, min-max score (1 = most secure)",0 to 1,,Author's construction
+self_sufficiency_filled,Energy self-sufficiency: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+access_electricity,"Access to electricity (Accessibility), raw value",% of population,higher is more secure,"World Bank, World Development Indicators (EG.ELC.ACCS.ZS)"
+access_electricity_score,"Access to electricity, min-max score (1 = most secure)",0 to 1,,Author's construction
+access_electricity_filled,Access to electricity: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+td_losses,"Power transmission and distribution losses (Accessibility), raw value",% of output,lower is more secure,"World Bank, World Development Indicators (EG.ELC.LOSS.ZS)"
+td_losses_score,"Power transmission and distribution losses, min-max score (1 = most secure)",0 to 1,,Author's construction
+td_losses_filled,Power transmission and distribution losses: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+gdppc_growth,"GDP per capita growth (Affordability), raw value",annual %,higher is more secure,"World Bank, World Development Indicators (NY.GDP.PCAP.KD.ZG)"
+gdppc_growth_score,"GDP per capita growth, min-max score (1 = most secure)",0 to 1,,Author's construction
+gdppc_growth_filled,GDP per capita growth: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+energy_cpi_inflation,"Energy CPI inflation (Affordability), raw value",annual %,lower is more secure,"World Bank, Global Database of Inflation (energy CPI inflation)"
+energy_cpi_inflation_winsorised,"Energy CPI inflation, winsorised at the pooled 1st and 99th percentiles (used for the score)",annual %,lower is more secure,Author's construction
+energy_cpi_inflation_score,"Energy CPI inflation, min-max score (1 = most secure)",0 to 1,,Author's construction
+energy_cpi_inflation_filled,Energy CPI inflation: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+ghg_per_capita,"GHG emissions per capita (Acceptability), raw value",t CO2e per person,lower is more secure,"World Bank, World Development Indicators (EN.GHG.ALL.PC.CE.AR5)"
+ghg_per_capita_score,"GHG emissions per capita, min-max score (1 = most secure)",0 to 1,,Author's construction
+ghg_per_capita_filled,GHG emissions per capita: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+energy_intensity,"Energy intensity (Acceptability), raw value",MJ per $ of GDP (2021 PPP),lower is more secure,"World Bank, World Development Indicators (EG.EGY.PRIM.PP.KD)"
+energy_intensity_score,"Energy intensity, min-max score (1 = most secure)",0 to 1,,Author's construction
+energy_intensity_filled,Energy intensity: 1 if the raw source had no value and it was interpolated or carried forward,0/1,,
+esi_arithmetic,Sensitivity: arithmetic mean of the four dimensions,0 to 1,,
+esi_mc_mean,"Sensitivity: mean ESI over 1,000 random dimension weightings",0 to 1,,
+esi_mc_p05,"Sensitivity: 5th percentile over the 1,000 weightings",0 to 1,,
+esi_mc_p95,"Sensitivity: 95th percentile over the 1,000 weightings",0 to 1,,

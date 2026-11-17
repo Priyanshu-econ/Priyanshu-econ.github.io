@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Energy Security Index</title>
+  <meta name="description" content="Energy Security Index (ESI) for 40 countries, 2000–2024, built on the Availability, Accessibility, Affordability and Acceptability (4-A) framework. Interactive dashboard, data downloads and methodology by Priyanshu Chavda.">
+  <meta name="author" content="Priyanshu Chavda">
+  <meta property="og:title" content="Energy Security Index">
+  <meta property="og:description" content="Country-level Energy Security Index for 40 countries, 2000–2024: dashboard, data and methodology.">
+  <meta property="og:type" content="website">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') { var h = new Date().getHours(); t = (h >= 19 || h < 6) ? 'dark' : 'light'; }
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="esi.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner wide">
+    <a class="brand" href="../">Priyanshu Chavda</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#country" class="hide-sm">Countries</a>
+      <a href="#data">Data</a>
+      <a href="#method">Method</a>
+      <a href="#cite">Cite</a>
+    </nav>
+    <button class="theme" type="button" aria-label="Switch to night mode" title="Switch day / night">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><g><line x1="12" y1="1.8" x2="12" y2="4.2"/><line x1="12" y1="19.8" x2="12" y2="22.2"/><line x1="1.8" y1="12" x2="4.2" y2="12"/><line x1="19.8" y1="12" x2="22.2" y2="12"/><line x1="4.8" y1="4.8" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19.2" y2="19.2"/><line x1="4.8" y1="19.2" x2="6.5" y2="17.5"/><line x1="17.5" y1="6.5" x2="19.2" y2="4.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wide" id="top">
+
+  <section class="esi-hero">
+    <p class="kicker">Dataset · Version <span data-meta="version">1.0</span> · Priyanshu Chavda</p>
+    <h1>Energy Security Index</h1>
+    <p class="lede">A composite index of energy security for <strong>40 countries from 2000 to 2024</strong>, built on the four As of energy security: <strong>Availability, Accessibility, Affordability and Acceptability</strong>. Explore every country, every dimension and every indicator, then download the data for your own work.</p>
+    <ul class="facts-row">
+      <li><b>40</b><span>countries</span></li>
+      <li><b>25</b><span>years, 2000–2024</span></li>
+      <li><b>4</b><span>dimensions</span></li>
+      <li><b>8</b><span>indicators</span></li>
+    </ul>
+    <ul class="btns">
+      <li><a class="btn primary" href="downloads/ESI_dataset_v1.0.xlsx" download>Download Excel</a></li>
+      <li><a class="btn" href="#data">Download CSV</a></li>
+      <li><a class="btn" href="downloads/ESI_methodology.pdf">Methodology (PDF)</a></li>
+      <li><a class="btn" href="downloads/Chavda_2026_Geopolitical_Risk_and_Energy_Security.pdf">Full paper (PDF)</a></li>
+      <li><a class="btn" href="#cite">How to cite</a></li>
+    </ul>
+  </section>
+
+  <!-- ALL COUNTRIES -->
+  <section class="esi-sec" id="dashboard">
+    <h2>All countries</h2>
+    <p class="sub">Pick the index, a dimension or a single indicator, the countries you want to see, and a year. Every score runs from 0 to 1, where 1 is the most secure country-year in the sample; darker means more secure.</p>
+
+    <div class="controls" role="group" aria-label="Dashboard filters">
+      <label class="ctl"><span>Measure</span><select id="measure"></select></label>
+      <div class="ctl"><span>Countries</span>
+        <details class="cfilter"><summary id="cf-sum">All 40</summary>
+          <div class="cf-panel">
+            <div class="cf-presets" id="cf-presets" aria-label="Quick selections"></div>
+            <div class="cf-list" id="cf-list"></div>
+          </div>
+        </details>
+      </div>
+      <div class="ctl"><span>Year</span>
+        <div class="yearbox">
+          <input type="range" id="year" min="2000" max="2024" step="1" value="2024" aria-label="Year">
+          <output id="yearOut" for="year">2024</output>
+          <button class="btn small" id="play" type="button" aria-label="Play years">Play</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fig" data-fig="map">
+      <div class="fig-head">
+        <div><h3 data-title></h3><p data-sub></p></div>
+        <div class="fig-tools"><button class="btn small" data-export="png">PNG</button><button class="btn small" data-export="jpg">JPG</button></div>
+      </div>
+      <div class="plot"></div>
+      <div class="legend"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="fig" data-fig="rank">
+        <div class="fig-head">
+          <div><h3 data-title></h3><p data-sub></p></div>
+          <div class="fig-tools"><button class="btn small" data-export="png">PNG</button><button class="btn small" data-export="jpg">JPG</button></div>
+        </div>
+        <div class="plot"></div>
+        <details class="tablev"><summary>View as table</summary><div class="scroll"></div></details>
+      </div>
+      <div class="fig" data-fig="heat">
+        <div class="fig-head">
+          <div><h3 data-title></h3><p data-sub></p></div>
+          <div class="fig-tools"><button class="btn small" data-export="png">PNG</button><button class="btn small" data-export="jpg">JPG</button></div>
+        </div>
+        <div class="plot"></div>
+        <div class="legend"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONE COUNTRY -->
+  <section class="esi-sec" id="country">
+    <h2>One country</h2>
+    <p class="sub">The index over time, its four dimensions, and the eight indicators behind them in their original units.</p>
+    <div class="controls"><label class="ctl"><span>Country</span><select id="country-sel"></select></label></div>
+
+    <div class="tiles" id="tiles"></div>
+
+    <div class="grid2">
+      <div class="fig" data-fig="esiline">
+        <div class="fig-head">
+          <div><h3 data-title></h3><p data-sub></p></div>
+          <div class="fig-tools"><button class="btn small" data-export="png">PNG</button><button class="btn small" data-export="jpg">JPG</button></div>
+        </div>
+        <div class="plot"></div>
+        <div class="legend"></div>
+      </div>
+      <div class="fig" data-fig="dims">
+        <div class="fig-head">
+          <div><h3 data-title></h3><p data-sub></p></div>
+          <div class="fig-tools"><button class="btn small" data-export="png">PNG</button><button class="btn small" data-export="jpg">JPG</button></div>
+        </div>
+        <div class="plot"></div>
+        <div class="legend"></div>
+      </div>
+    </div>
+
+    <div class="fig" data-fig="inds">
+      <div class="fig-head">
+        <div><h3 data-title></h3><p data-sub></p></div>
+        <div class="fig-tools"><button class="btn small" data-export="png">PNG</button><button class="btn small" data-export="jpg">JPG</button></div>
+      </div>
+      <div class="plot"></div>
+      <div class="legend"></div>
+      <details class="tablev"><summary>View this country's data as a table</summary><div class="scroll"></div></details>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section class="esi-sec" id="compare">
+    <h2>Compare countries</h2>
+    <p class="sub">Up to three countries on any measure. Indicators are shown in their original units.</p>
+    <div class="controls">
+      <label class="ctl"><span>Measure</span><select id="cmp-measure"></select></label>
+      <label class="ctl"><span>Add a country</span><select id="cmp-add"></select></label>
+      <div class="ctl"><span>Selected</span><div class="chips" id="cmp-chips"></div></div>
+    </div>
+    <div class="fig" data-fig="cmp">
+      <div class="fig-head">
+        <div><h3 data-title></h3><p data-sub></p></div>
+        <div class="fig-tools"><button class="btn small" data-export="png">PNG</button><button class="btn small" data-export="jpg">JPG</button></div>
+      </div>
+      <div class="plot"></div>
+      <div class="legend"></div>
+    </div>
+  </section>
+
+  <!-- DATA -->
+  <section class="esi-sec" id="data">
+    <h2>Data</h2>
+    <p class="sub">© 2026 Priyanshu Chavda. The data are free to use, share and adapt under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, on one condition: cite the paper and the dataset (see <a href="#cite">How to cite</a>).</p>
+    <ul class="files">
+      <li><div><b>Complete dataset (Excel)</b><p>All sheets in one workbook: read me, scores, indicators, sensitivity and codebook.</p></div><a class="btn primary" href="downloads/ESI_dataset_v1.0.xlsx" download>ESI_dataset_v1.0.xlsx</a></li>
+      <li><div><b>Index and dimension scores (CSV)</b><p>ESI, the four dimension scores and their yearly ranks for every country-year.</p></div><a class="btn" href="downloads/esi_scores.csv" download>esi_scores.csv</a></li>
+      <li><div><b>Indicators (CSV)</b><p>The eight indicators: raw value, normalised score (0–1) and a flag for values filled because the source had none.</p></div><a class="btn" href="downloads/esi_indicators.csv" download>esi_indicators.csv</a></li>
+      <li><div><b>Sensitivity (CSV)</b><p>Arithmetic aggregation, and the mean, 5th and 95th percentiles of the ESI over 1,000 random weightings.</p></div><a class="btn" href="downloads/esi_sensitivity.csv" download>esi_sensitivity.csv</a></li>
+      <li><div><b>Codebook (CSV)</b><p>Every variable with its definition, unit, direction and source.</p></div><a class="btn" href="downloads/esi_codebook.csv" download>esi_codebook.csv</a></li>
+      <li><div><b>Methodology (PDF)</b><p>Every construction choice and the reasoning behind it.</p></div><a class="btn" href="downloads/ESI_methodology.pdf">ESI_methodology.pdf</a></li>
+      <li><div><b>The paper (PDF)</b><p>The full job market paper that builds the index and uses it. Working draft, November 2026.</p></div><a class="btn" href="downloads/Chavda_2026_Geopolitical_Risk_and_Energy_Security.pdf">Paper PDF</a></li>
+      <li><div><b>Replication code</b><p>The Python script that builds the index and every file here from the raw indicators.</p></div><a class="btn" href="https://github.com/Priyanshu-econ/priyanshu-econ.github.io/tree/main/esi/code">View on GitHub</a></li>
+    </ul>
+    <p class="note-sm">The raw indicators come from the World Bank (World Development Indicators and the Global Database of Inflation, both CC BY 4.0), Our World in Data (CC BY 4.0) and the U.S. Energy Information Administration (public domain). If you use the raw values, please credit those sources as well. About <span data-meta="filled">3</span>% of indicator values were missing in the sources and were filled by linear interpolation or by carrying the nearest year forward; each one is flagged in the data.</p>
+  </section>
+
+  <!-- METHOD -->
+  <section class="esi-sec" id="method">
+    <h2>Method</h2>
+    <p class="sub">The index follows the OECD and JRC handbook on composite indicators. The <a href="downloads/ESI_methodology.pdf">methodology PDF</a> gives every choice in full.</p>
+
+    <div class="fig">
+      <div class="scroll" style="max-height:none">
+        <table class="tbl" id="frame-table">
+          <thead><tr><th>Dimension</th><th style="text-align:left">Indicator</th><th style="text-align:left">Unit</th><th style="text-align:left">Direction</th><th style="text-align:left">Source</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li><b>Outlier treatment</b><p>Energy CPI inflation is extremely skewed (skewness about 30, kurtosis above 900; Venezuela reached 94,802% in 2018). Following the JRC statistical audits of composite indicators, which treat an indicator when |skewness| &gt; 2.25 and kurtosis &gt; 3.5, it is winsorised at the pooled 1st and 99th percentiles (−8.6% and 71.8%; 20 of 1,000 values) before normalisation. Raw values are kept in the data files.</p></li>
+      <li><b>Min–max normalisation, pooled over all countries and years</b><p>Each indicator is rescaled to 0–1 using the minimum and maximum across all 1,000 country-years, so scores are comparable across countries and over time. Indicators where a lower value means more security are reversed.</p>
+        <span class="formula">p = (x − min) / (max − min) &nbsp;or&nbsp; p = (max − x) / (max − min)</span></li>
+      <li><b>Equal weights</b><p>Each dimension gets a weight of 0.25 and each indicator 0.5 within its dimension, so all eight indicators weigh 12.5% overall.</p></li>
+      <li><b>Arithmetic mean within each dimension</b><p>The two indicators of a dimension can offset each other.</p>
+        <span class="formula">D = ½ (p₁ + p₂)</span></li>
+      <li><b>Geometric mean across dimensions</b><p>A weak dimension cannot be fully offset by a strong one, so balanced energy systems score higher.</p>
+        <span class="formula">ESI = (D<sub>Avail</sub> × D<sub>Access</sub> × D<sub>Afford</sub> × D<sub>Accept</sub>)<sup>¼</sup></span></li>
+      <li><b>Sensitivity</b><p id="sens-text">The index is recomputed under 1,000 random weightings and with arithmetic aggregation.</p></li>
+    </ol>
+    <p class="note-sm">Scores are relative to this sample: 1 is the best value observed among these 40 countries over 2000–2024, not an absolute target. Adding countries or years changes the minimum and maximum and therefore the scores, so cite the version you use.</p>
+  </section>
+
+  <!-- CITE -->
+  <section class="esi-sec" id="cite">
+    <h2>How to cite</h2>
+    <p class="sub">Citation is required whenever you use the index, its scores, its figures or the processed data.</p>
+    <div class="cite">
+      <h3>Paper</h3>
+      <p class="ref" id="cite-paper"></p>
+      <h3>Dataset</h3>
+      <p class="ref" id="cite-data"></p>
+      <ul class="btns" style="margin-top:.9rem">
+        <li><button class="btn small" type="button" data-copy="text">Copy citations</button></li>
+        <li><button class="btn small" type="button" data-copy="bib">Copy BibTeX</button></li>
+      </ul>
+      <details><summary>BibTeX</summary><pre id="bibtex"></pre></details>
+    </div>
+    <p class="note-sm">Figures downloaded from this page carry the source line. Please keep it when you reuse them.</p>
+  </section>
+
+  <!-- PAPER -->
+  <section class="esi-sec" id="paper">
+    <h2>The paper</h2>
+    <p class="title" style="font-size:1.3rem">Geopolitical Risk and Energy Security: Quantile and Logit Evidence from a Composite Index</p>
+    <p class="meta">Priyanshu Chavda · Job market paper · Pandit Deendayal Energy University</p>
+    <p class="abstract">Energy security has re-emerged as a central policy concern amid recurring geopolitical shocks, decarbonisation commitments and rapid technological change. This paper examines how geopolitical risk, financial development, green trade and technological innovation shape energy security across economies with different levels of security, using a multidimensional Energy Security Index built on the Availability, Accessibility, Affordability and Acceptability (4-A) framework for 40 economies over 2000–2024, Method of Moments Quantile Regression, IV-GMM and a logit model of high- and low-security regimes.</p>
+    <p class="links"><a class="btn primary" href="downloads/Chavda_2026_Geopolitical_Risk_and_Energy_Security.pdf">Read the full paper (PDF)</a></p>
+    <p class="note-sm">Working draft, November 2026. © 2026 Priyanshu Chavda, all rights reserved. Please cite it rather than redistribute it, and check this page for the latest version.</p>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-inner wide">
+    <p>© 2026 Priyanshu Chavda. All rights reserved for the website, text, figures and paper. The ESI data are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>: reuse is free with citation.<br>Energy Security Index, version <span data-meta="version">1.0</span>.<br>Priyanshu Chavda, Department of Economics, Pandit Deendayal Energy University</p>
+    <p><a href="../">Home</a> · <a href="mailto:priyanshu.chavda2002@gmail.com">priyanshu.chavda2002@gmail.com</a></p>
+  </div>
+</footer>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<div class="toast" id="toast"></div>
+<script src="esi.js"></script>
+</body>
+</html>
